@@ -1,0 +1,84 @@
+# Binaries for programs and plugins
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+
+# Build / output folders
+/bin/
+/build/
+/dist/
+*.out
+cover.out
+
+# Dependency directories
+/vendor/
+
+# Go workspace files
+go.work
+go.work.sum
+
+# Package objects (GOPATH legacy)
+pkg/
+
+# Generated protobuf / gRPC / other generated code (optional)
+# *.pb.go
+
+# Editor / IDE
+.vscode/
+.idea/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Env / secret files
+.env
+.env.*
+
+# Misc caches
+.cache/
+```// filepath: /Users/abhi/Documents/github/OMS/.gitignore
+# Binaries for programs and plugins
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+
+# Build / output folders
+/bin/
+/build/
+/dist/
+*.out
+cover.out
+
+# Dependency directories
+/vendor/
+
+# Go workspace files
+go.work
+go.work.sum
+
+# Package objects (GOPATH legacy)
+pkg/
+
+# Generated protobuf / gRPC / other generated code (optional)
+# *.pb.go
+
+# Editor / IDE
+.vscode/
+.idea/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Env / secret files
+.env
+.env.*
+
+# Misc caches
