@@ -5,6 +5,7 @@ import (
 
 	"github.com/abhinavmedikonda/OMS/catalog/pb"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 type Client struct {
@@ -13,7 +14,10 @@ type Client struct {
 }
 
 func NewClient(url string) (*Client, error) {
-	conn, err := grpc.Dial(url, grpc.WithInsecure())
+	conn, err := grpc.NewClient(
+		url,
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	)
 	if err != nil {
 		return nil, err
 	}

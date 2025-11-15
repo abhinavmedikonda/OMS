@@ -84,7 +84,7 @@ type ComplexityRoot struct {
 
 	Query struct {
 		Accounts func(childComplexity int, pagination *PaginationInput, id *string) int
-		Products func(childComplexity int, pagination *PaginationInput, id *string) int
+		Products func(childComplexity int, pagination *PaginationInput, query *string, id *string) int
 	}
 }
 
@@ -98,7 +98,7 @@ type MutationResolver interface {
 }
 type QueryResolver interface {
 	Accounts(ctx context.Context, pagination *PaginationInput, id *string) ([]*Account, error)
-	Products(ctx context.Context, pagination *PaginationInput, id *string) ([]*Product, error)
+	Products(ctx context.Context, pagination *PaginationInput, query *string, id *string) ([]*Product, error)
 }
 
 type executableSchema struct {
@@ -275,7 +275,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Query.Products(childComplexity, args["pagination"].(*PaginationInput), args["id"].(*string)), true
+		return e.complexity.Query.Products(childComplexity, args["pagination"].(*PaginationInput), args["query"].(*string), args["id"].(*string)), true
 
 	}
 	return 0, false
@@ -474,11 +474,16 @@ func (ec *executionContext) field_Query_products_args(ctx context.Context, rawAr
 		return nil, err
 	}
 	args["pagination"] = arg0
-	arg1, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalOString2ᚖstring)
+	arg1, err := graphql.ProcessArgField(ctx, rawArgs, "query", ec.unmarshalOString2ᚖstring)
 	if err != nil {
 		return nil, err
 	}
-	args["id"] = arg1
+	args["query"] = arg1
+	arg2, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalOString2ᚖstring)
+	if err != nil {
+		return nil, err
+	}
+	args["id"] = arg2
 	return args, nil
 }
 
@@ -1228,7 +1233,7 @@ func (ec *executionContext) _Query_products(ctx context.Context, field graphql.C
 		ec.fieldContext_Query_products,
 		func(ctx context.Context) (any, error) {
 			fc := graphql.GetFieldContext(ctx)
-			return ec.resolvers.Query().Products(ctx, fc.Args["pagination"].(*PaginationInput), fc.Args["id"].(*string))
+			return ec.resolvers.Query().Products(ctx, fc.Args["pagination"].(*PaginationInput), fc.Args["query"].(*string), fc.Args["id"].(*string))
 		},
 		nil,
 		ec.marshalNProduct2ᚕᚖgithubᚗcomᚋabhinavmedikondaᚋOMSᚋgraphqlᚐProductᚄ,

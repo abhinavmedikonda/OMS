@@ -27,7 +27,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: s}))
+	srv := handler.NewDefaultServer(s.ToExecutableSchema())
 	http.Handle("/graphql", srv)
 	http.Handle("/playground", playground.Handler("abhi", "/graphql"))
 
