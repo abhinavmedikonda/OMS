@@ -1,5 +1,3 @@
-version: "3.7"
-
 services:
   account:
     build:
@@ -8,7 +6,7 @@ services:
     depends_on:
       - account_db
     environment:
-      DATABASE_URL: postgres://abhi:123456@account_db/pgdb?sslmode=disable
+      DATABASE_URL: postgres://abhi:123456@account_db/account_db?sslmode=disable
     restart: on-failure
 
   catalog:
@@ -28,7 +26,7 @@ services:
     depends_on:
       - order_db
     environment:
-      DATABASE_URL: postgres://abhi:123456@order_db/pgdb?sslmode=disable
+      DATABASE_URL: postgres://abhi:123456@order_db/order_db?sslmode=disable
       ACCOUNT_SERVICE_URL: account:8080
       CATALOG_SERVICE_URL: catalog:8080
     restart: on-failure
@@ -52,14 +50,18 @@ services:
     build:
       context: ./account
       dockerfile: ./db.dockerfile
+    # ports:
+    # - "5432:5432"
     environment:
-      POSTGRES_DB: pgdb
+      POSTGRES_DB: account_db
       POSTGRES_USER: abhi
       POSTGRES_PASSWORD: 123456
     restart: unless-stopped
 
   catalog_db:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+    # ports:
+    # - "9200:9200"
     environment:
       ES_JAVA_OPTS: -Xms1g -Xmx1g
       discovery.type: single-node
@@ -68,8 +70,10 @@ services:
     build:
       context: ./order
       dockerfile: ./db.dockerfile
+    # ports:
+    # - "5432:5432"
     environment:
-      POSTGRES_DB: pgdb
+      POSTGRES_DB: order_db
       POSTGRES_USER: abhi
       POSTGRES_PASSWORD: 123456
     restart: unless-stopped
