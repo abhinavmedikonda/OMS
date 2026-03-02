@@ -4,9 +4,9 @@ services:
       context: .
       dockerfile: ./account/app.dockerfile
     depends_on:
-      - account_db
+      - account-db
     environment:
-      DATABASE_URL: postgres://abhi:123456@account_db/account_db?sslmode=disable
+      DATABASE_URL: postgres://abhi:123456@account-db/account_db?sslmode=disable
     restart: on-failure
 
   catalog:
@@ -14,9 +14,9 @@ services:
       context: .
       dockerfile: ./catalog/app.dockerfile
     depends_on:
-      - catalog_db
+      - catalog-db
     environment:
-      DATABASE_URL: http://catalog_db:9200
+      DATABASE_URL: http://catalog-db:9200
     restart: on-failure
 
   order:
@@ -24,9 +24,9 @@ services:
       context: .
       dockerfile: ./order/app.dockerfile
     depends_on:
-      - order_db
+      - order-db
     environment:
-      DATABASE_URL: postgres://abhi:123456@order_db/order_db?sslmode=disable
+      DATABASE_URL: postgres://abhi:123456@order-db/order_db?sslmode=disable
       ACCOUNT_SERVICE_URL: account:8080
       CATALOG_SERVICE_URL: catalog:8080
     restart: on-failure
@@ -46,7 +46,7 @@ services:
       ORDER_SERVICE_URL: order:8080
     restart: on-failure
 
-  account_db:
+  account-db:
     build:
       context: ./account
       dockerfile: ./db.dockerfile
@@ -58,7 +58,7 @@ services:
       POSTGRES_PASSWORD: 123456
     restart: unless-stopped
 
-  catalog_db:
+  catalog-db:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
     # ports:
     # - "9200:9200"
@@ -66,7 +66,7 @@ services:
       ES_JAVA_OPTS: -Xms1g -Xmx1g
       discovery.type: single-node
 
-  order_db:
+  order-db:
     build:
       context: ./order
       dockerfile: ./db.dockerfile
