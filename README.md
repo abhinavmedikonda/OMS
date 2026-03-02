@@ -1,3 +1,6 @@
+http://localhost:8000/graphql
+http://localhost:8000/playground
+
 ACCOUNT:
 
 query q {
