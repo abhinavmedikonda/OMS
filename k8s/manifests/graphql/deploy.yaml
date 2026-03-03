@@ -19,3 +19,6 @@ spec:
         image: abhinavmedikonda/graphql:v1
         ports:
         - containerPort: 8080
+        env:
+        - name: ACCOUNT_SERVICE_URL
+          value: "account:80"
