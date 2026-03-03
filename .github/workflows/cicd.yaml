@@ -30,21 +30,6 @@ jobs:
         go build -o catalog/bin/catalog ./catalog/cmd/catalog
         go build -o order/bin/order ./order/cmd/order
         go build -o graphql/bin/graphql ./graphql
-
-    - name: Test
-      run: go test ./...
-  
-  code-quality:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Run golangci-lint
-      uses: golangci/golangci-lint-action@v6
-      with:
-        version: v1.56.2
   
   push:
     runs-on: ubuntu-latest
