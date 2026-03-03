@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalog
+  labels:
+    app: catalog
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: catalog
+  template:
+    metadata:
+      labels:
+        app: catalog
+    spec:
+      initContainers:
+      - name: create-index
+        image: curlimages/curl:latest
+        command: 
+        - sh
+        - -c
+        - |
+          curl -X PUT http://catalog-db:9200/catalog -H 'Content-Type: application/json' -d '{
+            "mappings": {
+              "product": {
+                "properties": {
+                  "name": {"type": "text"},
+                  "description": {"type": "text"},
+                  "price": {"type": "float"}
+                }
+              }
+            }
+          }' || true
+      containers:
+      - name: catalog
+        image: abhinavmedikonda/catalog:v1
+        ports:
+        - containerPort: 8080
+        env:
+        - name: DATABASE_URL
+          value: "http://catalog-db:9200"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalog-db
+  labels:
+    app: catalog-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: catalog-db
+  template:
+    metadata:
+      labels:
+        app: catalog-db
+    spec:
+      containers:
+      - name: catalog-db
+        image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+        ports:
+        - containerPort: 9200
+        env:
+        - name: ES_JAVA_OPTS
+          value: "-Xms1g -Xmx1g"
+        - name: discovery.type
+          value: "single-node"
+        - name: network.host
+          value: 0.0.0.0

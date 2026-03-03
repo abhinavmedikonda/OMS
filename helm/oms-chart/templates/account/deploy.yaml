@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: account
+  labels:
+    app: account
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: account
+  template:
+    metadata:
+      labels:
+        app: account
+    spec:
+      containers:
+      - name: account
+        image: abhinavmedikonda/account:{{.Values.image.tag}}
+        ports:
+        - containerPort: 8080
+        env:
+        - name: DATABASE_URL
+          value: "postgres://abhi:1234@account-db:5432/account_db?sslmode=disable"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: account-db
+  labels:
+    app: account-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: account-db
+  template:
+    metadata:
+      labels:
+        app: account-db
+    spec:
+      containers:
+      - name: account-db
+        image: abhinavmedikonda/account-db:v1
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: "account_db"
+        - name: POSTGRES_USER
+          value: "abhi"
+        - name: POSTGRES_PASSWORD
+          value: "1234"
