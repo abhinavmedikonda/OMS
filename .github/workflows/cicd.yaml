@@ -1,0 +1,109 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'helm/**' # stop cycling
+      - 'k8s/**'
+      - 'README.md'
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Go 1.22
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.22
+
+    - name: Build all services
+      run: |
+        # compile each service to catch build errors early
+        go build -o account/bin/account ./account/cmd/account
+        go build -o catalog/bin/catalog ./catalog/cmd/catalog
+        go build -o order/bin/order ./order/cmd/order
+        go build -o graphql/bin/graphql ./graphql
+
+    - name: Test
+      run: go test ./...
+  
+  code-quality:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Run golangci-lint
+      uses: golangci/golangci-lint-action@v6
+      with:
+        version: v1.56.2
+  
+  push:
+    runs-on: ubuntu-latest
+
+    needs: build
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Login to DockerHub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Build and push all service images
+      env:
+        IMAGE_NAMESPACE: ${{ secrets.DOCKERHUB_USERNAME }}
+        RUN_ID: ${{ github.run_id }}
+      run: |
+        set -euo pipefail
+        services=(
+          "account:account/app.dockerfile"
+          "account-db:account/db.dockerfile"
+          "catalog:catalog/app.dockerfile"
+          "order:order/app.dockerfile"
+          "order-db:order/db.dockerfile"
+          "graphql:graphql/app.dockerfile"
+        )
+        for s in "${services[@]}"; do
+          IFS=":" read -r img df <<< "$s"
+          tag="${IMAGE_NAMESPACE}/${img}:${RUN_ID}"
+          latest="${IMAGE_NAMESPACE}/${img}:latest"
+          docker buildx build --platform linux/amd64 -t "$tag" -t "$latest" -f "$df" . --push
+        done
+
+  update-newtag-in-helm-chart:
+    runs-on: ubuntu-latest
+
+    needs: push
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.TOKEN }}
+
+    - name: Update tag in Helm chart
+      run: |
+        sed -i 's/tag: .*/tag: "${{github.run_id}}"/' helm/go-web-app-chart/values.yaml
+
+    - name: Commit and push changes
+      run: |
+        git config --global user.email "abhishek@gmail.com"
+        git config --global user.name "Abhishek Veeramalla"
+        git add helm/go-web-app-chart/values.yaml
+        git commit -m "Update tag in Helm chart"
+        git push
