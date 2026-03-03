@@ -23,6 +23,11 @@ jobs:
       with:
         go-version: 1.22
 
+    - name: Ensure vendor directory
+      run: |
+        # regenerate vendor to guarantee it exists in workspace
+        go mod vendor
+
     - name: Build all services
       run: |
         # compile each service to catch build errors early
