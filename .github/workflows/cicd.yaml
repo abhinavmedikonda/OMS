@@ -81,7 +81,7 @@ jobs:
           docker buildx build --platform linux/amd64 -t "$tag" -t "$latest" -f "$df" "$ctx" --push
         done
 
-  update-tag-in-helm:
+  update-tag-in-helm-chart:
     runs-on: ubuntu-latest
 
     needs: push-images-to-dockerhub
@@ -98,6 +98,8 @@ jobs:
 
     - name: Commit and push changes
       run: |
+        git config --global user.email "abhinavmedikonda@hotmail.com"
+        git config --global user.name "abhinavmedikonda"
         git add helm/oms-chart/values.yaml
         git commit -m "Update tag in Helm chart"
         git push
