@@ -62,10 +62,10 @@ jobs:
         set -euo pipefail
         services=(
           "account:account/app.dockerfile"
-          "account-db:account/db.dockerfile"
+          # "account-db:account/db.dockerfile"
           "catalog:catalog/app.dockerfile"
           "order:order/app.dockerfile"
-          "order-db:order/db.dockerfile"
+          # "order-db:order/db.dockerfile"
           "graphql:graphql/app.dockerfile"
         )
         for s in "${services[@]}"; do
