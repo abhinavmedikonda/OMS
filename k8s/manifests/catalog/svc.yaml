@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: catalog
+  labels:
+    app: catalog
+spec:
+  selector:
+    app: catalog
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: catalog-db
+  labels:
+    app: catalog-db
+spec:
+  selector:
+    app: catalog-db
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 9200
+      targetPort: 9200
