@@ -18,14 +18,14 @@ else
 	go run .
 endif
 
-docup:
+dockup:
 	docker-compose up --build
 
-docdown:
+dockdown:
 	docker-compose down -v
 
-docapp:
+dockapp:
 	docker build -t abhinavmedikonda/$(SERVICE):v1 -f $(SERVICE)/app.dockerfile .
 
-docdb:
+dockdb:
 	docker build -t abhinavmedikonda/$(SERVICE)-db:v1 -f $(SERVICE)/db.dockerfile $(SERVICE)/

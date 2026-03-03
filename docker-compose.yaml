@@ -1,36 +1,4 @@
 services:
-  account:
-    build:
-      context: .
-      dockerfile: ./account/app.dockerfile
-    depends_on:
-      - account-db
-    environment:
-      DATABASE_URL: postgres://abhi:123456@account-db/account_db?sslmode=disable
-    restart: on-failure
-
-  catalog:
-    build:
-      context: .
-      dockerfile: ./catalog/app.dockerfile
-    depends_on:
-      - catalog-db
-    environment:
-      DATABASE_URL: http://catalog-db:9200
-    restart: on-failure
-
-  order:
-    build:
-      context: .
-      dockerfile: ./order/app.dockerfile
-    depends_on:
-      - order-db
-    environment:
-      DATABASE_URL: postgres://abhi:123456@order-db/order_db?sslmode=disable
-      ACCOUNT_SERVICE_URL: account:8080
-      CATALOG_SERVICE_URL: catalog:8080
-    restart: on-failure
-
   graphql:
     build:
       context: .
@@ -55,8 +23,40 @@ services:
     environment:
       POSTGRES_DB: account_db
       POSTGRES_USER: abhi
-      POSTGRES_PASSWORD: 123456
+      POSTGRES_PASSWORD: 1234
     restart: unless-stopped
+
+  account:
+    build:
+      context: .
+      dockerfile: ./account/app.dockerfile
+    depends_on:
+      - account-db
+    environment:
+      DATABASE_URL: postgres://abhi:1234@account-db/account_db?sslmode=disable
+    restart: on-failure
+
+  catalog:
+    build:
+      context: .
+      dockerfile: ./catalog/app.dockerfile
+    depends_on:
+      - catalog-db
+    environment:
+      DATABASE_URL: http://catalog-db:9200
+    restart: on-failure
+
+  order:
+    build:
+      context: .
+      dockerfile: ./order/app.dockerfile
+    depends_on:
+      - order-db
+    environment:
+      DATABASE_URL: postgres://abhi:1234@order-db/order_db?sslmode=disable
+      ACCOUNT_SERVICE_URL: account:8080
+      CATALOG_SERVICE_URL: catalog:8080
+    restart: on-failure
 
   catalog-db:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
@@ -75,5 +75,5 @@ services:
     environment:
       POSTGRES_DB: order_db
       POSTGRES_USER: abhi
-      POSTGRES_PASSWORD: 123456
+      POSTGRES_PASSWORD: 1234
     restart: unless-stopped
