@@ -84,7 +84,7 @@ jobs:
   update-tag-in-helm:
     runs-on: ubuntu-latest
 
-    needs: push
+    needs: push-images-to-dockerhub
 
     steps:
     - name: Checkout repository
