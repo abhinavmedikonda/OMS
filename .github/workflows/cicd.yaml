@@ -72,7 +72,13 @@ jobs:
           IFS=":" read -r img df <<< "$s"
           tag="${IMAGE_NAMESPACE}/${img}:${RUN_ID}"
           latest="${IMAGE_NAMESPACE}/${img}:latest"
-          docker buildx build --platform linux/amd64 -t "$tag" -t "$latest" -f "$df" . --push
+          # choose context: use service dir for db images, otherwise project root
+          if [[ "$df" == */db.dockerfile ]]; then
+            ctx=$(dirname "$df")
+          else
+            ctx="."
+          fi
+          docker buildx build --platform linux/amd64 -t "$tag" -t "$latest" -f "$df" "$ctx" --push
         done
 
   update-newtag-in-helm-chart:
