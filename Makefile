@@ -29,3 +29,6 @@ dockapp:
 
 dockdb:
 	docker build -t abhinavmedikonda/$(SERVICE)-db:v1 -f $(SERVICE)/db.dockerfile $(SERVICE)/
+
+k6:
+	k6 run k6.js

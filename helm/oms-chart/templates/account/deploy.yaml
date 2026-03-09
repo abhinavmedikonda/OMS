@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: account
-        image: abhinavmedikonda/account:{{.Values.image.tag}}
+        image: abhinavmedikonda/account:{{ .Values.image.tag }}
         ports:
         - containerPort: 8080
         env:

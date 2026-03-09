@@ -34,7 +34,7 @@ spec:
           }' || true
       containers:
       - name: catalog
-        image: abhinavmedikonda/catalog:v1
+        image: abhinavmedikonda/catalog:{{ .Values.image.tag }}
         ports:
         - containerPort: 8080
         env:
