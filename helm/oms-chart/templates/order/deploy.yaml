@@ -1,56 +1,56 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: order
+  name: order{{ .Values.env_hyp }}
   labels:
-    app: order
+    app: order{{ .Values.env_hyp }}
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: order
+      app: order{{ .Values.env_hyp }}
   template:
     metadata:
       labels:
-        app: order
+        app: order{{ .Values.env_hyp }}
     spec:
       containers:
-      - name: order
+      - name: order{{ .Values.env_hyp }}
         image: abhinavmedikonda/order:{{ .Values.image.tag }}
         ports:
         - containerPort: 8080
         env:
         - name: DATABASE_URL
-          value: "postgres://abhi:1234@order-db:5432/order_db?sslmode=disable"
+          value: "postgres://abhi:1234@order-db{{ .Values.env_hyp }}:5432/order_db{{ .Values.env_und }}?sslmode=disable"
         - name: ACCOUNT_SERVICE_URL
-          value: "account:80"
+          value: "account{{ .Values.env_hyp }}:80"
         - name: CATALOG_SERVICE_URL
-          value: "catalog:80"
+          value: "catalog{{ .Values.env_hyp }}:80"
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: order-db
+  name: order-db{{ .Values.env_hyp }}
   labels:
-    app: order-db
+    app: order-db{{ .Values.env_hyp }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: order-db
+      app: order-db{{ .Values.env_hyp }}
   template:
     metadata:
       labels:
-        app: order-db
+        app: order-db{{ .Values.env_hyp }}
     spec:
       containers:
-      - name: order-db
+      - name: order-db{{ .Values.env_hyp }}
         image: abhinavmedikonda/order-db:v1
         ports:
         - containerPort: 5432
         env:
         - name: POSTGRES_DB
-          value: "order_db"
+          value: "order_db{{ .Values.env_und }}"
         - name: POSTGRES_USER
           value: "abhi"
         - name: POSTGRES_PASSWORD
