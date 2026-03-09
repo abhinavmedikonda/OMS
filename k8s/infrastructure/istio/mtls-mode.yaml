@@ -1,0 +1,20 @@
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: mtls-permissive
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: graphql
+  mtls:
+    mode: PERMISSIVE
+---
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: mtls-strict
+  namespace: default
+spec:
+  mtls:
+    mode: STRICT
