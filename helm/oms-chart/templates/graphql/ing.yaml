@@ -15,13 +15,13 @@ spec:
         path: "/graphql"
         backend:
           service:
-            name: app
+            name: api
             port:
               number: 80
       - pathType: Prefix
         path: "/playground"
         backend:
           service:
-            name: app
+            name: api
             port:
               number: 80
