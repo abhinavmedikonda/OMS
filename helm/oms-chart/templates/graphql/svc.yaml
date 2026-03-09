@@ -1,12 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: graphql{{ .Values.env_hyp }}
+  name: app
+  namespace: graphql{{ .Values.env_hyp }}
   labels:
-    app: graphql{{ .Values.env_hyp }}
+    app: app
 spec:
   selector:
-    app: graphql{{ .Values.env_hyp }}
+    app: app
   type: ClusterIP
   ports:
     - protocol: TCP

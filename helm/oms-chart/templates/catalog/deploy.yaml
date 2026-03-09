@@ -1,18 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: catalog{{ .Values.env_hyp }}
+  name: api
+  namespace: catalog{{ .Values.env_hyp }}
   labels:
-    app: catalog{{ .Values.env_hyp }}
+    app: api
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: catalog{{ .Values.env_hyp }}
+      app: api
   template:
     metadata:
       labels:
-        app: catalog{{ .Values.env_hyp }}
+        app: api
     spec:
       initContainers:
       - name: create-index
@@ -21,7 +22,7 @@ spec:
         - sh
         - -c
         - |
-          curl -X PUT http://catalog-db{{ .Values.env_hyp }}:9200/catalog -H 'Content-Type: application/json' -d '{
+          curl -X PUT http://db.catalog{{ .Values.env_hyp }}:9200/catalog -H 'Content-Type: application/json' -d '{
             "mappings": {
               "product": {
                 "properties": {
@@ -33,32 +34,33 @@ spec:
             }
           }' || true
       containers:
-      - name: catalog{{ .Values.env_hyp }}
+      - name: api
         image: abhinavmedikonda/catalog:{{ .Values.image.tag }}
         ports:
         - containerPort: 8080
         env:
         - name: DATABASE_URL
-          value: "http://catalog-db{{ .Values.env_hyp }}:9200"
+          value: "http://db.catalog{{ .Values.env_hyp }}:9200"
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: catalog-db{{ .Values.env_hyp }}
+  name: db
+  namespace: catalog{{ .Values.env_hyp }}
   labels:
-    app: catalog-db{{ .Values.env_hyp }}
+    app: db
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: catalog-db{{ .Values.env_hyp }}
+      app: db
   template:
     metadata:
       labels:
-        app: catalog-db{{ .Values.env_hyp }}
+        app: db
     spec:
       containers:
-      - name: catalog-db{{ .Values.env_hyp }}
+      - name: db
         image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
         ports:
         - containerPort: 9200

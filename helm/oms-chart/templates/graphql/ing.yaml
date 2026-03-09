@@ -1,7 +1,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: graphql{{ .Values.env_hyp }}
+  name: ingress-nginx
+  namespace: graphql{{ .Values.env_hyp }}
   # annotations:
   #   nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
@@ -14,13 +15,13 @@ spec:
         path: "/graphql"
         backend:
           service:
-            name: graphql{{ .Values.env_hyp }}
+            name: app
             port:
               number: 80
       - pathType: Prefix
         path: "/playground"
         backend:
           service:
-            name: graphql{{ .Values.env_hyp }}
+            name: app
             port:
               number: 80

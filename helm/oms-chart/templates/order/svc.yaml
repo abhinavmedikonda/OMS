@@ -1,12 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: order{{ .Values.env_hyp }}
+  name: api
+  namespace: order{{ .Values.env_hyp }}
   labels:
-    app: order{{ .Values.env_hyp }}
+    app: api
 spec:
   selector:
-    app: order{{ .Values.env_hyp }}
+    app: api
   type: ClusterIP
   ports:
     - protocol: TCP
@@ -16,12 +17,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: order-db{{ .Values.env_hyp }}
+  name: db
+  namespace: order{{ .Values.env_hyp }}
   labels:
-    app: order-db{{ .Values.env_hyp }}
+    app: db
 spec:
   selector:
-    app: order-db{{ .Values.env_hyp }}
+    app: db
   type: ClusterIP
   ports:
     - protocol: TCP

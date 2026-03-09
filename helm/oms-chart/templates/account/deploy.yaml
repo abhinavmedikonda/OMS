@@ -1,46 +1,48 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: account{{ .Values.env_hyp }}
+  name: api
+  namespace: account{{ .Values.env_hyp }}
   labels:
-    app: account{{ .Values.env_hyp }}
+    app: api
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: account{{ .Values.env_hyp }}
+      app: api
   template:
     metadata:
       labels:
-        app: account{{ .Values.env_hyp }}
+        app: api
     spec:
       containers:
-      - name: account{{ .Values.env_hyp }}
+      - name: api
         image: abhinavmedikonda/account:{{ .Values.image.tag }}
         ports:
         - containerPort: 8080
         env:
         - name: DATABASE_URL
-          value: "postgres://abhi:1234@account-db{{ .Values.env_hyp }}:5432/account_db{{ .Values.env_und }}?sslmode=disable"
+          value: "postgres://abhi:1234@db.account{{ .Values.env_hyp }}:5432/account_db{{ .Values.env_und }}?sslmode=disable"
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: account-db{{ .Values.env_hyp }}
+  name: db
+  namespace: account{{ .Values.env_hyp }}
   labels:
-    app: account-db{{ .Values.env_hyp }}
+    app: db
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: account-db{{ .Values.env_hyp }}
+      app: db
   template:
     metadata:
       labels:
-        app: account-db{{ .Values.env_hyp }}
+        app: db
     spec:
       containers:
-      - name: account-db{{ .Values.env_hyp }}
+      - name: db
         image: abhinavmedikonda/account-db:v1
         ports:
         - containerPort: 5432

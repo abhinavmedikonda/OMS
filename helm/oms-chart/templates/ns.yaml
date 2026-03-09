@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: account-dev
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: catalog-dev
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: order-dev
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: graphql-dev
