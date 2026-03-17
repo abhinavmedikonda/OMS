@@ -25,10 +25,10 @@ dockdown:
 	docker-compose down -v
 
 dockapp:
-	docker build -t abhinavmedikonda/$(SERVICE):v1 -f $(SERVICE)/app.dockerfile .
+	docker build -t abhinavmedikonda/oms-$(SERVICE)-api:latest -f $(SERVICE)/app.dockerfile .
 
 dockdb:
-	docker build -t abhinavmedikonda/$(SERVICE)-db:v1 -f $(SERVICE)/db.dockerfile $(SERVICE)/
+	docker build -t abhinavmedikonda/oms-$(SERVICE)-db:latest -f $(SERVICE)/db.dockerfile $(SERVICE)/
 
 k6:
 	k6 run k6.js
