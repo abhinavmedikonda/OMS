@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: api
-        image: abhinavmedikonda/graphql:{{ .Values.image.tag }}
+        image: abhinavmedikonda/oms-graphql-api:{{ .Values.image.tag }}
         ports:
         - containerPort: 8080
         env:

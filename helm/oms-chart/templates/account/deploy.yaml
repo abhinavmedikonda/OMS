@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: api
-        image: abhinavmedikonda/account:{{ .Values.image.tag }}
+        image: abhinavmedikonda/oms-account-api:{{ .Values.image.tag }}
         ports:
         - containerPort: 8080
         env:
@@ -43,7 +43,7 @@ spec:
     spec:
       containers:
       - name: db
-        image: abhinavmedikonda/account-db:v1
+        image: abhinavmedikonda/oms-account-db:{{ .Values.image.tag }}
         ports:
         - containerPort: 5432
         env:

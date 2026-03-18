@@ -35,7 +35,7 @@ spec:
           }' || true
       containers:
       - name: api
-        image: abhinavmedikonda/catalog:{{ .Values.image.tag }}
+        image: abhinavmedikonda/oms-catalog-api:{{ .Values.image.tag }}
         ports:
         - containerPort: 8080
         env:
