@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: api
-  namespace: account{{ .Values.env_hyp }}
+  namespace: account-{{ .Values.env }}
   labels:
     app: api
 spec:
@@ -22,13 +22,13 @@ spec:
         - containerPort: 8080
         env:
         - name: DATABASE_URL
-          value: "postgres://abhi:1234@db.account{{ .Values.env_hyp }}:5432/account_db{{ .Values.env_und }}?sslmode=disable"
+          value: "postgres://abhi:1234@db.account-{{ .Values.env }}:5432/account_db_{{ .Values.env }}?sslmode=disable"
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: db
-  namespace: account{{ .Values.env_hyp }}
+  namespace: account-{{ .Values.env }}
   labels:
     app: db
 spec:
@@ -48,7 +48,7 @@ spec:
         - containerPort: 5432
         env:
         - name: POSTGRES_DB
-          value: "account_db{{ .Values.env_und }}"
+          value: "account_db_{{ .Values.env }}"
         - name: POSTGRES_USER
           value: "abhi"
         - name: POSTGRES_PASSWORD

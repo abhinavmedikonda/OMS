@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: api
-  namespace: catalog{{ .Values.env_hyp }}
+  namespace: catalog-{{ .Values.env }}
   labels:
     app: api
 spec:
@@ -22,7 +22,7 @@ spec:
         - sh
         - -c
         - |
-          curl -X PUT http://db.catalog{{ .Values.env_hyp }}:9200/catalog -H 'Content-Type: application/json' -d '{
+          curl -X PUT http://db.catalog-{{ .Values.env }}:9200/catalog -H 'Content-Type: application/json' -d '{
             "mappings": {
               "product": {
                 "properties": {
@@ -40,13 +40,13 @@ spec:
         - containerPort: 8080
         env:
         - name: DATABASE_URL
-          value: "http://db.catalog{{ .Values.env_hyp }}:9200"
+          value: "http://db.catalog-{{ .Values.env }}:9200"
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: db
-  namespace: catalog{{ .Values.env_hyp }}
+  namespace: catalog-{{ .Values.env }}
   labels:
     app: db
 spec:

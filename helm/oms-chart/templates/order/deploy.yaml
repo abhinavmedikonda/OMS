@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: api
-  namespace: order{{ .Values.env_hyp }}
+  namespace: order-{{ .Values.env }}
   labels:
     app: api
 spec:
@@ -22,17 +22,17 @@ spec:
         - containerPort: 8080
         env:
         - name: DATABASE_URL
-          value: "postgres://abhi:1234@db.order{{ .Values.env_hyp }}:5432/order_db{{ .Values.env_und }}?sslmode=disable"
+          value: "postgres://abhi:1234@db.order-{{ .Values.env }}:5432/order_db_{{ .Values.env }}?sslmode=disable"
         - name: ACCOUNT_SERVICE_URL
-          value: "api.account{{ .Values.env_hyp }}:80"
+          value: "api.account-{{ .Values.env }}:80"
         - name: CATALOG_SERVICE_URL
-          value: "api.catalog{{ .Values.env_hyp }}:80"
+          value: "api.catalog-{{ .Values.env }}:80"
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: db
-  namespace: order{{ .Values.env_hyp }}
+  namespace: order-{{ .Values.env }}
   labels:
     app: db
 spec:
@@ -52,7 +52,7 @@ spec:
         - containerPort: 5432
         env:
         - name: POSTGRES_DB
-          value: "order_db{{ .Values.env_und }}"
+          value: "order_db_{{ .Values.env }}"
         - name: POSTGRES_USER
           value: "abhi"
         - name: POSTGRES_PASSWORD

@@ -2,13 +2,13 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ingress-nginx
-  namespace: graphql{{ .Values.env_hyp }}
+  namespace: graphql-{{ .Values.env }}
   # annotations:
   #   nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   ingressClassName: nginx
   rules:
-  - host: "oms{{ .Values.env_van }}.local"
+  - host: "oms{{- if and .Values.env (ne .Values.env \"prod\") -}}-{{ .Values.env }}{{- end }}.local"
     http:
       paths:
       - pathType: Prefix
