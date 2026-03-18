@@ -8,7 +8,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: "oms{{- if and .Values.env (ne .Values.env \"prod\") -}}-{{ .Values.env }}{{- end }}.local"
+  - host: "oms{{- if and .Values.env (ne .Values.env `prod`) -}}-{{ .Values.env }}{{- end }}.local"
     http:
       paths:
       - pathType: Prefix
