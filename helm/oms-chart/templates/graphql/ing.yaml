@@ -8,7 +8,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: "oms.local"
+  - host: "oms{{ .Values.env_van }}.local"
     http:
       paths:
       - pathType: Prefix
