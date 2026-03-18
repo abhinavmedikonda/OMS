@@ -47,7 +47,7 @@ spec:
     spec:
       containers:
       - name: db
-        image: abhinavmedikonda/oms-order-db:{{ .Values.image.tag }}
+        image: abhinavmedikonda/oms-order-db:v1
         ports:
         - containerPort: 5432
         env:
