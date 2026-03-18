@@ -70,8 +70,8 @@ jobs:
         )
         for s in "${services[@]}"; do
           IFS=":" read -r img df <<< "$s"
-          tag="${IMAGE_NAMESPACE}/${img}:${RUN_ID}"
-          latest="${IMAGE_NAMESPACE}/${img}:latest"
+          tag="${IMAGE_NAMESPACE}/oms-${img}-api:${RUN_ID}"
+          latest="${IMAGE_NAMESPACE}/oms-${img}-api:latest"
           # choose context: use service dir for db images, otherwise project root
           if [[ "$df" == */db.dockerfile ]]; then
             ctx=$(dirname "$df")
