@@ -1,0 +1,13 @@
+apiVersion: crd.projectcalico.org/v1
+kind: GlobalNetworkPolicy
+metadata:
+  name: allow-{{ .Values.env }}
+spec:
+  order: 100
+  selector: all()
+  types:
+  - Ingress
+  ingress:
+  - action: Allow
+    source:
+      namespaceSelector: "env == '{{ .Values.env }}'"

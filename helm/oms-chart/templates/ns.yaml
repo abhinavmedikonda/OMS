@@ -3,6 +3,7 @@ kind: Namespace
 metadata:
   name: account-{{ .Values.env }}
   labels:
+    env: {{ .Values.env }}
     istio-injection: enabled
 ---
 apiVersion: security.istio.io/v1beta1
@@ -19,6 +20,7 @@ kind: Namespace
 metadata:
   name: catalog-{{ .Values.env }}
   labels:
+    env: {{ .Values.env }}
     istio-injection: enabled
 ---
 apiVersion: security.istio.io/v1beta1
@@ -35,6 +37,7 @@ kind: Namespace
 metadata:
   name: order-{{ .Values.env }}
   labels:
+    env: {{ .Values.env }}
     istio-injection: enabled
 ---
 apiVersion: security.istio.io/v1beta1
@@ -51,6 +54,7 @@ kind: Namespace
 metadata:
   name: graphql-{{ .Values.env }}
   labels:
+    env: {{ .Values.env }}
     istio-injection: enabled
 ---
 apiVersion: security.istio.io/v1beta1
