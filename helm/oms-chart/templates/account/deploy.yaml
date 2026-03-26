@@ -20,6 +20,14 @@ spec:
         image: abhinavmedikonda/oms-account-api:{{ .Values.image.tag }}
         ports:
         - containerPort: 8080
+        # livenessProbe:
+        #   httpGet:
+        #     path: /healthz
+        #     port: 8081
+        # readinessProbe:
+        #   httpGet:
+        #     path: /
+        #     port: 80
         env:
         - name: DB_U
           valueFrom:

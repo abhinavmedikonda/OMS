@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+spec:
+  volumes:
+  - name: shared-data
+    emptyDir: {}
+  - name: logs-data
+    emptyDir: {}
+  initContainers:
+  - name: init-config
+    image: busybox
+    command: ['sh', '-c', 'echo "Hello from Init Container" > /shared/message.txt']
+    volumeMounts:
+    - name: shared-data
+      mountPath: /shared
+  - name: init-logs
+    image: busybox
+    command: ['sh', '-c', 'mkdir -p /logs; touch /logs/app.log']
+    volumeMounts:
+      - name: logs-data
+        mountPath: /logs
+  containers:
+  - name: main-app
+    image: busybox
+    command: ['sh', '-c', 'cat /shared/message.txt; while true; do echo "$(date) App is running" >> /logs/app.log; sync; sleep 10; done']
+    volumeMounts:
+    - name: shared-data
+      mountPath: /shared
+    - name: logs-data
+      mountPath: /logs
+  - name: main-logger
+    image: busybox
+    command: ['sh', '-c', 'tail -f /logs/app.log']
+    volumeMounts:
+    - name: logs-data
+      mountPath: /logs
