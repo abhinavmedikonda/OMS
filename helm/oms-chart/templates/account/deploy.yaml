@@ -77,3 +77,10 @@ spec:
             secretKeyRef:
               name: vault
               key: db-password
+        volumeMounts:
+        - name: db-data
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: db-data
+        persistentVolumeClaim:
+          claimName: pvc
