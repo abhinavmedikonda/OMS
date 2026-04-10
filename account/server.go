@@ -7,6 +7,7 @@ import (
 	"net"
 
 	"github.com/abhinavmedikonda/OMS/account/pb"
+	"github.com/abhinavmedikonda/OMS/observability"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -21,7 +22,7 @@ func ListenGRPC(s Service, port int) error {
 	if err != nil {
 		return err
 	}
-	serv := grpc.NewServer()
+	serv := grpc.NewServer(observability.GRPCServerOptions()...)
 	pb.RegisterAccountServiceServer(serv, &grpcServer{service: s})
 	reflection.Register(serv)
 	return serv.Serve(lis)

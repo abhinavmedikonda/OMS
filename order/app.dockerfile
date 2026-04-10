@@ -6,6 +6,7 @@ COPY vendor vendor
 COPY account account
 COPY catalog catalog
 COPY order order
+COPY observability observability
 RUN GO111MODULE=on go build -mod vendor -o /go/bin/app ./order/cmd/order
 
 FROM alpine:3.22.1

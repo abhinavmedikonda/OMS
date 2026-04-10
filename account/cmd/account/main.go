@@ -1,10 +1,12 @@
 package main
 
 import (
+	"context"
 	"log"
 	"time"
 
 	"github.com/abhinavmedikonda/OMS/account"
+	"github.com/abhinavmedikonda/OMS/observability"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/tinrab/retry"
 )
@@ -14,8 +16,19 @@ type Config struct {
 }
 
 func main() {
+	ctx := context.Background()
+	provider, err := observability.Setup(ctx, "account")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer func() {
+		if err := provider.Shutdown(ctx); err != nil {
+			log.Printf("observability shutdown: %v", err)
+		}
+	}()
+
 	var cfg Config
-	err := envconfig.Process("", &cfg)
+	err = envconfig.Process("", &cfg)
 	if err != nil {
 		log.Fatal(err)
 	}

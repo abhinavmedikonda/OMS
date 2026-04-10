@@ -4,6 +4,7 @@ WORKDIR /go/src/github.com/abhinavmedikonda/OMS
 COPY go.mod go.sum ./
 COPY vendor vendor
 COPY catalog catalog
+COPY observability observability
 RUN GO111MODULE=on go build -mod vendor -o /go/bin/app ./catalog/cmd/catalog
 
 FROM alpine:3.22.1

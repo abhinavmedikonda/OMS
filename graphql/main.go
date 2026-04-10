@@ -1,11 +1,13 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/abhinavmedikonda/OMS/observability"
 	"github.com/kelseyhightower/envconfig"
 )
 
@@ -16,8 +18,19 @@ type AppConfig struct {
 }
 
 func main() {
+	ctx := context.Background()
+	provider, err := observability.Setup(ctx, "graphql")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer func() {
+		if err := provider.Shutdown(ctx); err != nil {
+			log.Printf("observability shutdown: %v", err)
+		}
+	}()
+
 	var cfg AppConfig
-	err := envconfig.Process("", &cfg)
+	err = envconfig.Process("", &cfg)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -28,8 +41,8 @@ func main() {
 	}
 
 	srv := handler.NewDefaultServer(s.ToExecutableSchema())
-	http.Handle("/graphql", srv)
-	http.Handle("/playground", playground.Handler("abhi", "/graphql"))
+	http.Handle("/graphql", observability.HTTPHandler(srv, "graphql"))
+	http.Handle("/playground", observability.HTTPHandler(playground.Handler("abhi", "/graphql"), "playground"))
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

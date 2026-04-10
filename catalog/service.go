@@ -3,6 +3,8 @@ package catalog
 import (
 	"context"
 
+	"go.opentelemetry.io/otel"
+
 	"github.com/segmentio/ksuid"
 )
 
@@ -30,6 +32,10 @@ func NewService(r Repository) Service {
 }
 
 func (s *catalogService) PostProduct(ctx context.Context, name, description string, price float64) (*Product, error) {
+	tracer := otel.Tracer("catalog-service")
+	ctx, span := tracer.Start(ctx, "PostProduct")
+	defer span.End()
+
 	p := &Product{
 		Name:        name,
 		Description: description,
@@ -43,10 +49,18 @@ func (s *catalogService) PostProduct(ctx context.Context, name, description stri
 }
 
 func (s *catalogService) GetProduct(ctx context.Context, id string) (*Product, error) {
+	tracer := otel.Tracer("catalog-service")
+	ctx, span := tracer.Start(ctx, "GetProduct")
+	defer span.End()
+
 	return s.repository.GetProductByID(ctx, id)
 }
 
 func (s *catalogService) GetProducts(ctx context.Context, skip uint64, take uint64) ([]Product, error) {
+	tracer := otel.Tracer("catalog-service")
+	ctx, span := tracer.Start(ctx, "GetProducts")
+	defer span.End()
+
 	if take > 100 || (skip == 0 && take == 0) {
 		take = 100
 	}
@@ -54,10 +68,18 @@ func (s *catalogService) GetProducts(ctx context.Context, skip uint64, take uint
 }
 
 func (s *catalogService) GetProductsByIDs(ctx context.Context, ids []string) ([]Product, error) {
+	tracer := otel.Tracer("catalog-service")
+	ctx, span := tracer.Start(ctx, "GetProductsByIDs")
+	defer span.End()
+
 	return s.repository.ListProductsWithIDs(ctx, ids)
 }
 
 func (s *catalogService) SearchProducts(ctx context.Context, query string, skip uint64, take uint64) ([]Product, error) {
+	tracer := otel.Tracer("catalog-service")
+	ctx, span := tracer.Start(ctx, "SearchProducts")
+	defer span.End()
+
 	if take > 100 || (skip == 0 && take == 0) {
 		take = 100
 	}

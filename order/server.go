@@ -10,6 +10,7 @@ import (
 
 	"github.com/abhinavmedikonda/OMS/account"
 	"github.com/abhinavmedikonda/OMS/catalog"
+	"github.com/abhinavmedikonda/OMS/observability"
 	"github.com/abhinavmedikonda/OMS/order/pb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -41,7 +42,7 @@ func ListenGRPC(s Service, accountURL, catalogURL string, port int) error {
 		return err
 	}
 
-	serv := grpc.NewServer()
+	serv := grpc.NewServer(observability.GRPCServerOptions()...)
 	pb.RegisterOrderServiceServer(serv, &grpcServer{
 		service:       s,
 		accountClient: accountClient,

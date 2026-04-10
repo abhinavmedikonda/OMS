@@ -5,7 +5,10 @@ import (
 	"time"
 
 	"github.com/segmentio/ksuid"
+	"go.opentelemetry.io/otel"
 )
+
+var tracer = otel.Tracer("order-service")
 
 type Service interface {
 	PostOrder(ctx context.Context, accountID string, products []OrderedProduct) (*Order, error)
@@ -41,6 +44,9 @@ func (s orderService) PostOrder(
 	accountID string,
 	products []OrderedProduct,
 ) (*Order, error) {
+	ctx, span := tracer.Start(ctx, "PostOrder")
+	defer span.End()
+
 	o := &Order{
 		ID:        ksuid.New().String(),
 		CreatedAt: time.Now().UTC(),
@@ -60,5 +66,8 @@ func (s orderService) PostOrder(
 }
 
 func (s orderService) GetOrdersForAccount(ctx context.Context, accountID string) ([]Order, error) {
+	ctx, span := tracer.Start(ctx, "GetOrdersForAccount")
+	defer span.End()
+
 	return s.repository.GetOrdersForAccount(ctx, accountID)
 }

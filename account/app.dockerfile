@@ -4,6 +4,7 @@ WORKDIR /go/src/github.com/abhinavmedikonda/OMS
 COPY go.mod go.sum ./
 COPY vendor vendor
 COPY account account
+COPY observability observability
 RUN GO111MODULE=on go build -mod vendor -o /go/bin/app ./account/cmd/account
 
 FROM alpine:3.22.1

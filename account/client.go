@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/abhinavmedikonda/OMS/account/pb"
+	"github.com/abhinavmedikonda/OMS/observability"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -16,7 +17,7 @@ type Client struct {
 func NewClient(url string) (*Client, error) {
 	conn, err := grpc.NewClient(
 		url,
-		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		append([]grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}, observability.GRPCClientOptions()...)...,
 	)
 	if err != nil {
 		return nil, err

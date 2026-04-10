@@ -1,8 +1,17 @@
 package main
 
 import (
+	"context"
 	"log"
 	"time"
+
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc"
+	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
+	"go.opentelemetry.io/otel/sdk/metric"
+	"go.opentelemetry.io/otel/sdk/resource"
+	"go.opentelemetry.io/otel/sdk/trace"
+	semconv "go.opentelemetry.io/otel/semconv/v1.26.0"
 
 	"github.com/abhinavmedikonda/OMS/order"
 	"github.com/kelseyhightower/envconfig"
@@ -16,8 +25,49 @@ type Config struct {
 }
 
 func main() {
+	ctx := context.Background()
+	res, err := resource.New(ctx,
+		resource.WithAttributes(
+			semconv.ServiceNameKey.String("order"),
+		),
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	traceExporter, err := otlptracegrpc.New(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	tracerProvider := trace.NewTracerProvider(
+		trace.WithBatcher(traceExporter),
+		trace.WithResource(res),
+	)
+	otel.SetTracerProvider(tracerProvider)
+
+	metricExporter, err := otlpmetricgrpc.New(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	meterProvider := metric.NewMeterProvider(
+		metric.WithReader(metric.NewPeriodicReader(metricExporter)),
+		metric.WithResource(res),
+	)
+	otel.SetMeterProvider(meterProvider)
+
+	defer func() {
+		if err := tracerProvider.Shutdown(ctx); err != nil {
+			log.Printf("Error shutting down tracer provider: %v", err)
+		}
+		if err := meterProvider.Shutdown(ctx); err != nil {
+			log.Printf("Error shutting down meter provider: %v", err)
+		}
+	}()
+
 	var cfg Config
-	err := envconfig.Process("", &cfg)
+	err = envconfig.Process("", &cfg)
 	if err != nil {
 		log.Fatal(err)
 	}
