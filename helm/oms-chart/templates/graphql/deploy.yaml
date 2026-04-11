@@ -27,3 +27,5 @@ spec:
           value: "api.catalog-{{ .Values.env }}:80"
         - name: ORDER_SERVICE_URL
           value: "api.order-{{ .Values.env }}:80"
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: "{{ .Values.otel.exporter.endpoint }}"
