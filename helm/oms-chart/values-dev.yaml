@@ -6,7 +6,7 @@ env: dev
 
 otel:
   exporter:
-    endpoint: "jaeger.default.svc.cluster.local:4317"
+    endpoint: "otel-collector-opentelemetry-collector.default.svc.cluster.local:4317"
 
 # This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
 replicaCount: 1

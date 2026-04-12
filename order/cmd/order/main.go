@@ -37,7 +37,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	traceExporter, err := otlptracegrpc.New(ctx, otlptracegrpc.WithEndpoint(os.Getenv("OTEL_EXPORTER_OTLP_ENDPOINT")))
+	traceExporter, err := otlptracegrpc.New(
+		ctx,
+		otlptracegrpc.WithEndpoint(os.Getenv("OTEL_EXPORTER_OTLP_ENDPOINT")),
+		otlptracegrpc.WithInsecure(),
+	)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -48,7 +52,11 @@ func main() {
 	)
 	otel.SetTracerProvider(tracerProvider)
 
-	metricExporter, err := otlpmetricgrpc.New(ctx, otlpmetricgrpc.WithEndpoint(os.Getenv("OTEL_EXPORTER_OTLP_ENDPOINT")))
+	metricExporter, err := otlpmetricgrpc.New(
+		ctx,
+		otlpmetricgrpc.WithEndpoint(os.Getenv("OTEL_EXPORTER_OTLP_ENDPOINT")),
+		otlpmetricgrpc.WithInsecure(),
+	)
 	if err != nil {
 		log.Fatal(err)
 	}
