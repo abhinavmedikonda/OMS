@@ -3,6 +3,7 @@ package observability
 import (
 	"context"
 	"fmt"
+	"os"
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc"
@@ -29,7 +30,7 @@ func Setup(ctx context.Context, serviceName string) (*Provider, error) {
 		return nil, err
 	}
 
-	traceExporter, err := otlptracegrpc.New(ctx)
+	traceExporter, err := otlptracegrpc.New(ctx, otlptracegrpc.WithEndpoint(os.Getenv("OTEL_EXPORTER_OTLP_ENDPOINT")))
 	if err != nil {
 		return nil, err
 	}
@@ -40,7 +41,7 @@ func Setup(ctx context.Context, serviceName string) (*Provider, error) {
 	)
 	otel.SetTracerProvider(tracerProvider)
 
-	metricExporter, err := otlpmetricgrpc.New(ctx)
+	metricExporter, err := otlpmetricgrpc.New(ctx, otlpmetricgrpc.WithEndpoint(os.Getenv("OTEL_EXPORTER_OTLP_ENDPOINT")))
 	if err != nil {
 		if shutdownErr := tracerProvider.Shutdown(ctx); shutdownErr != nil {
 			return nil, fmt.Errorf("trace exporter setup failed: %w; shutdown error: %v", err, shutdownErr)

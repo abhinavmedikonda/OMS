@@ -1,6 +1,11 @@
 http://localhost:8000/graphql
 http://localhost:8000/playground
 
+{
+  "db-password": "12345",
+  "db-username": "abcde"
+}
+
 ACCOUNT:
 
 query q {
