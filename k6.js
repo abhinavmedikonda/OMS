@@ -13,7 +13,7 @@ export const options = {
   },
 };
 
-const URL = "http://oms-sbx.local/graphql";
+const URL = "http://oms-dev.local/graphql";
 const headers = { "Content-Type": "application/json" };
 
 // --------------------
